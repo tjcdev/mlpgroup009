@@ -10,7 +10,7 @@ export CUDA_HOME=/opt/cuda-9.0.176.1/
 
 export CUDNN_HOME=/opt/cuDNN-7.0/
 
-export STUDENT_ID=s0908445
+export STUDENT_ID=/s0908445/
 
 export LD_LIBRARY_PATH=${CUDNN_HOME}/lib64:${CUDA_HOME}/lib64:$LD_LIBRARY_PATH
 
