@@ -32,6 +32,7 @@ mkdir -p ${TMP}/datasets/
 export DATASET_DIR=${TMP}/datasets/
 
 # Activate the relevant virtual environment:
-source /home/${STUDENT_ID}/miniconda3/bin/activate mlp
+source /home/${STUDENT_ID}/miniconda3/bin/activate mlpgroup
+
 cd mlpgroup009
 python -m baselines.run --alg=deepq --env=CartPole-v0 --save_path=./cartpole_model.pkl --num_timesteps=1e5
