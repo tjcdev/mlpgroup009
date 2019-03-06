@@ -1,3 +1,5 @@
 {
-    "python.pythonPath": "/Users/thomascartwright/miniconda3/bin/python"
+    "python.pythonPath": "/Users/thomascartwright/miniconda3/envs/mlpgroup/bin/python",
+    "python.condaPath": "/Users/thomascartwright/miniconda3/bin/activate",
+    "python.venvPath": "/Users/thomascartwright/miniconda3/envs"
 }
