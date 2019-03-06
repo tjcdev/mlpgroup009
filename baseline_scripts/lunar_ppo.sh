@@ -34,4 +34,6 @@ export DATASET_DIR=${TMP}/datasets/
 # Activate the relevant virtual environment:
 source /home/${STUDENT_ID}/miniconda3/bin/activate mlp009
 
-python -m baselines.run --alg=deepq --env=CartPole-v0 --save_path=./cartpole_model.pkl --num_timesteps=1e5
+cd mlpgroup009/
+
+python -m baselines.run --alg=ppo2 --env=LunarLander-v2 --num_timesteps=1e7 --save_path=baseline_experiments/lunar_ppo.pkl
