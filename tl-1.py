@@ -13,3 +13,8 @@
 
 '''
 
+import gym
+import baselines from deepq
+
+env = gym.make("LunarLander-v2")
+
