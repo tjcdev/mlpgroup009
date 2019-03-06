@@ -6,3 +6,9 @@ python -m baselines.run --alg=her --env=FetchReach-v1 --num_timesteps=10000 --sa
 
 # Bipedal Walker
 python -m baselines.run --alg=ppo2 --env=BipedalWalker-v2 --num_timesteps=1000 --save_path=baseline_experiments/walker_ppo2.pkl
+
+# Bipedal Hardcore Walker
+python -m baselines.run --alg=ppo2 --env=BipedalWalkerHardcore-v2 --num_timesteps=1000 --save_path=baseline_experiments/walker_hardcore_ppo2.pkl
+
+# Lunar Lander
+python -m baselines.run --alg=ppo2 --env=LunarLander-v2 --num_timesteps=1000 --save_path=baseline_experiments/lunar_ppo.pkl
