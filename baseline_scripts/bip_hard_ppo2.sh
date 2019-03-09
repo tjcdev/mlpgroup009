@@ -36,4 +36,4 @@ source /home/${STUDENT_ID}/miniconda3/bin/activate mlp009
 
 cd mlpgroup009/
 
-python -m baselines.run --alg=ppo2 --env=BipedalWalkerHardcore-v2 --num_timesteps=1e7 --save_path=baseline_experiments/walker_hardcore_ppo2.pkl
+python baseline_biphard_ppo2.py
