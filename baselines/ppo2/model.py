@@ -119,13 +119,28 @@ class Model(object):
         self.value = act_model.value
         self.initial_state = act_model.initial_state
 
-        self.save = functools.partial(save_variables, sess=sess)
-        self.load = functools.partial(load_variables, sess=sess)
+        #self.save = functools.partial(save_variables, sess=sess)
+        #self.load = functools.partial(load_variables, sess=sess)
 
         initialize()
         global_variables = tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope="")
         if MPI is not None:
             sync_from_root(sess, global_variables) #pylint: disable=E1101
+
+    def save(self, save_path):
+        """
+        Save the model
+        """
+        saver = tf.train.Saver()
+        saver.save(self.sess, save_path)
+
+    def load(self, load_path):
+        """
+        Load the model
+        """
+        saver = tf.train.Saver()
+        print('Loading ' + load_path)
+        saver.restore(self.sess, load_path)
 
     def train(self, lr, cliprange, obs, returns, masks, actions, values, neglogpacs, states=None):
         # Here we calculate advantage A(s,a) = R + yV(s') - V(s)
