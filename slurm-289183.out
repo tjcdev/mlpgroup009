@@ -1,9 +1,0 @@
-/var/spool/slurmd/job289183/slurm_script: line 37: cd: mlpgroup009: No such file or directory
-Traceback (most recent call last):
-  File "/home/s0908445/miniconda3/envs/mlpgroup/lib/python3.7/runpy.py", line 193, in _run_module_as_main
-    "__main__", mod_spec)
-  File "/home/s0908445/miniconda3/envs/mlpgroup/lib/python3.7/runpy.py", line 85, in _run_code
-    exec(code, run_globals)
-  File "/mnt/mscteach_home/s0908445/mlpgroup009/baselines/run.py", line 6, in <module>
-    import tensorflow as tf
-ModuleNotFoundError: No module named 'tensorflow'
