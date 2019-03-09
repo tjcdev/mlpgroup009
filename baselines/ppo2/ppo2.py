@@ -91,8 +91,8 @@ def learn(*, network, env, total_timesteps, eval_env = None, seed=None, nsteps=2
     nenvs = env.num_envs
 
     # Get state_space and action_space
-    ob_space = env.observation_space[0]
-    ac_space = env.action_space[0]
+    ob_space = env.observation_space
+    ac_space = env.action_space
 
     # Calculate the batch_size
     nbatch = nenvs * nsteps

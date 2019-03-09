@@ -9,9 +9,9 @@ from types import SimpleNamespace
 # Write all the arguments into a dictionary that we can references e.g. args.env
 args_dict={
     'alg': 'ppo2',
-    'total_timesteps': 10000,
+    'total_timesteps': 1e7,
     'seed': 0,
-    'env': 'BipedalWalker-v2',
+    'env': 'BipedalWalkerHardcore-v2',
     'network': 'mlp',
     'num_env': 1,
     'reward_scale': 1,
@@ -36,4 +36,4 @@ model = learn(
 )
 
 # Save the model and variables
-model.save('./baseline_weights/ppo2_bip')
+model.save('./baseline_weights/ppo2_biphard')
