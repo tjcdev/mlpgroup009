@@ -1,0 +1,2 @@
+model_checkpoint_path: "/Users/thomascartwright/Documents/Development/mlp/mlpgroup009//BipedalWalker-v2-ppo2final"
+all_model_checkpoint_paths: "/Users/thomascartwright/Documents/Development/mlp/mlpgroup009//BipedalWalker-v2-ppo2final"

@@ -85,7 +85,7 @@ class HumanOutputFormat(KVWriter, SeqWriter):
 
 class JSONOutputFormat(KVWriter):
     def __init__(self, filename):
-        self.file = open(filename, 'wt')
+        self.file = open(filename, 'a')
 
     def writekvs(self, kvs):
         for k, v in sorted(kvs.items()):
