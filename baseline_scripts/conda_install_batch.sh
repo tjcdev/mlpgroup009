@@ -36,4 +36,4 @@ source /home/${STUDENT_ID}/miniconda3/bin/activate mlp009
 
 cd mlpgroup009/
 
-python -m baselines.run --alg=trpo_mpi --env=BipedalWalkerHardcore-v2 --num_timesteps=1e7 --save_path=baseline_experiments/walker_hardcore_trpo.pkl
+conda install -c anaconda mpi4py
