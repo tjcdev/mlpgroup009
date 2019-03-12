@@ -5,7 +5,11 @@ import os
 from baselines.common.vec_env.subproc_vec_env import SubprocVecEnv
 from baselines.run import get_learn_function, get_env_type, get_learn_function_defaults, build_env
 
+import time
+
 from types import SimpleNamespace
+
+save_path = './' + str(time.time()) + '/'
 
 # Write all the arguments into a dictionary that we can references e.g. args.env
 args_dict={
@@ -21,7 +25,7 @@ args_dict={
     'num_epochs': 10000,
     'steps_per_update': 10000,
     'log_interval': 1,
-    'save_path':'./'
+    'save_path': save_path
 }
 args = SimpleNamespace(**args_dict)
 
