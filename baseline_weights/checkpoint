@@ -1,2 +1,0 @@
-model_checkpoint_path: "ppo2_bip"
-all_model_checkpoint_paths: "ppo2_bip"
