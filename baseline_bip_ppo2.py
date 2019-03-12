@@ -1,16 +1,20 @@
 import gym
 import tensorflow as tf
 import os
-import time
+
 from baselines.common.vec_env.subproc_vec_env import SubprocVecEnv
 from baselines.run import get_learn_function, get_env_type, get_learn_function_defaults, build_env
 
+import time
+
 from types import SimpleNamespace
+
+save_path = './' + str(time.time()).replace('.', '')
 
 # Write all the arguments into a dictionary that we can references e.g. args.env
 args_dict={
     'alg': 'ppo2',
-    'total_timesteps': 100000,
+    'total_timesteps': 1000000,
     'seed': 0,
     'env': 'BipedalWalker-v2',
     'network': 'mlp',
@@ -18,10 +22,10 @@ args_dict={
     'reward_scale': 1,
     'flatten_dict_observations': True,
     'save_interval': 1,
-    'num_epochs': 1000,
-    'steps_per_update': 1000,
+    'num_epochs': 10000,
+    'steps_per_update': 10000,
     'log_interval': 1,
-    'save_path':'./'
+    'save_path': save_path
 }
 args = SimpleNamespace(**args_dict)
 
