@@ -13,7 +13,7 @@ save_path = './' + str(time.time()).replace('.', '')
 
 # Write all the arguments into a dictionary that we can references e.g. args.env
 args_dict={
-    'alg': 'ppo2',
+    'alg': 'trpo_mpi',
     'total_timesteps': 1000000,
     'seed': 0,
     'env': 'BipedalWalkerHardcore-v2',
@@ -22,8 +22,8 @@ args_dict={
     'reward_scale': 1,
     'flatten_dict_observations': True,
     'save_interval': 1,
-    'num_epochs': 100000,
-    'steps_per_update': 100000,
+    'num_epochs': 10000,
+    'steps_per_update': 10000,
     'log_interval': 1,
     'save_path': save_path
 }
@@ -50,11 +50,8 @@ model = learn(
     env=env,
     seed=args.seed,
     total_timesteps=args.total_timesteps,
-    save_interval=args.save_interval,
-    noptepochs = args.num_epochs,
-    nsteps = args.steps_per_update,
-    log_interval = args.log_interval,
-    save_path = full_path,
+    save_path=args.save_path,
+    timesteps_per_batch=args.steps_per_update,
     **alg_kwargs
 )
 

@@ -36,4 +36,4 @@ source /home/${STUDENT_ID}/miniconda3/bin/activate mlp009
 
 cd mlpgroup009/
 
-python -m baselines.run --alg=trpo_mpi --env=BipedalWalker-v2 --num_timesteps=1e7 --save_path=baseline_experiments/walker_trpo.pkl
+python baseline_bip_trpo.py
