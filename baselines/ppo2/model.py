@@ -90,54 +90,48 @@ class Model(object):
         loss = pg_loss - entropy * ent_coef + vf_loss * vf_coef
 
         # UPDATE THE PARAMETERS USING LOSS
-        # 1. Get the model parameters
-        params = tf.trainable_variables('ppo2_model')
+        def print_weights(params):
+            variables_names = [v.name for v in params]
+            values = sess.run(variables_names)
+            for k, v in zip(variables_names, values):
+                if str(k) == 'ppo2_model/vf/w:0':
+                    print("Variable: " + str(k))
+                    print("Shape: " + str(v.shape))
+                    print(v)
 
-        # DAN TL CHANGES START: IMPORTING PRETRAINED AND REINITIALISING
+        # Transfer weights from an already trained model
+        # TODO: this is if we are going to use transfer learning
+        if True:
+            # Set the path to the pre-trained model
+            #pretrained_model = load_path + '/00068.meta'
 
-        def print_params(params):
-            for i in range(len(params)):
-                print(i)
-                print(params[i])
+            # Get all variables from the model.
+            variables_to_restore = {v.name.split(":")[0]: v
+                                    for v in tf.get_collection(
+                                        tf.GraphKeys.GLOBAL_VARIABLES)}
+                                    
+            # Skip some variables during restore.
+            skip_pretrained_var = []
+            variables_to_restore = {
+                v: variables_to_restore[v] for
+                v in variables_to_restore if not
+                any(x in v for x in skip_pretrained_var)}
 
+            # Restore the remaining variables
+            if variables_to_restore:
+                saver_pre_trained = tf.train.Saver(
+                    var_list=variables_to_restore)
+                    
+                saver_pre_trained.restore(sess, tf.train.latest_checkpoint(load_path))
 
-        def transfer_weights():
-            # weight reinitialisation multiplier: suggested [0.1, 0.03]
-            w = 0.1
-            
-            # Restore variables from disk
-            saver = tf.train.import_meta_graph(load_path + '/00068.meta')
-            saver.restore(sess, tf.train.latest_checkpoint(load_path))
-            print("model restored")
-            graph = sess.graph
-            trainable_variables = graph.get_collection('trainable_variables')                
-            tf.initialize_all_variables().run()
+            # Collect all trainale variables
+            params = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES)
 
-            # WEIGHTS TRANSFER
-            # Last layer weight re-initialisation                
-            shape = sess.run(trainable_variables[-2]).shape
-            trainable_variables.pop(-2)
-            
-            trainable_variables.append(tf.get_variable('new_weights', dtype=tf.float32,
-                                    initializer= tf.truncated_normal(shape, stddev=w)))
-            tf.initialize_all_variables().run()
-
-            # BIAS TRANSFER
-            # Last layer bias re-initialisation  
-            shape = sess.run(trainable_variables[-1]).shape
-            trainable_variables.pop(-1)
-            
-            trainable_variables.append(tf.get_variable('new_bias', dtype=tf.float32,
-                                        initializer= tf.constant(w, shape=shape)))
-            tf.initialize_all_variables().run()
-
-            return trainable_variables
-    
-        params = transfer_weights()
-        print_params(params)
-
-        # DAN TL END
-
+        else:
+            # If we are not using transfer learning
+            # 1. Get the model parameters
+            params = tf.trainable_variables('ppo2_model')
+      
         # 2. Build our trainer
         if MPI is not None:
             self.trainer = MpiAdamOptimizer(MPI.COMM_WORLD, learning_rate=LR, epsilon=1e-5)
@@ -150,7 +144,7 @@ class Model(object):
         if max_grad_norm is not None:
             # Clip the gradients (normalize)
             grads, _grad_norm = tf.clip_by_global_norm(grads, max_grad_norm)
-        # grads_and_var = list(zip(grads, var))
+        grads_and_var = zip(grads, var)
         # zip aggregate each gradient with parameters associated
         # For instance zip(ABCD, xyza) => Ax, By, Cz, Da
 
