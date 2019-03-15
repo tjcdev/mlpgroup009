@@ -1,6 +1,8 @@
 import tensorflow as tf
 import functools
 
+import sys
+
 from baselines.common.tf_util import get_session, save_variables, load_variables
 from baselines.common.tf_util import initialize
 
@@ -25,7 +27,7 @@ class Model(object):
     - Save load the model
     """
     def __init__(self, *, policy, ob_space, ac_space, nbatch_act, nbatch_train,
-                nsteps, ent_coef, vf_coef, max_grad_norm, microbatch_size=None):
+                nsteps, ent_coef, vf_coef, max_grad_norm, load_path, microbatch_size=None):
         self.sess = sess = get_session()
 
         with tf.variable_scope('ppo2_model', reuse=tf.AUTO_REUSE):
@@ -90,6 +92,52 @@ class Model(object):
         # UPDATE THE PARAMETERS USING LOSS
         # 1. Get the model parameters
         params = tf.trainable_variables('ppo2_model')
+
+        # DAN TL CHANGES START: IMPORTING PRETRAINED AND REINITIALISING
+
+        def print_params(params):
+            for i in range(len(params)):
+                print(i)
+                print(params[i])
+
+
+        def transfer_weights():
+            # weight reinitialisation multiplier: suggested [0.1, 0.03]
+            w = 0.1
+            
+            # Restore variables from disk
+            saver = tf.train.import_meta_graph(load_path + '/00068.meta')
+            saver.restore(sess, tf.train.latest_checkpoint(load_path))
+            print("model restored")
+            graph = sess.graph
+            trainable_variables = graph.get_collection('trainable_variables')                
+            tf.initialize_all_variables().run()
+
+            # WEIGHTS TRANSFER
+            # Last layer weight re-initialisation                
+            shape = sess.run(trainable_variables[-2]).shape
+            trainable_variables.pop(-2)
+            
+            trainable_variables.append(tf.get_variable('new_weights', dtype=tf.float32,
+                                    initializer= tf.truncated_normal(shape, stddev=w)))
+            tf.initialize_all_variables().run()
+
+            # BIAS TRANSFER
+            # Last layer bias re-initialisation  
+            shape = sess.run(trainable_variables[-1]).shape
+            trainable_variables.pop(-1)
+            
+            trainable_variables.append(tf.get_variable('new_bias', dtype=tf.float32,
+                                        initializer= tf.constant(w, shape=shape)))
+            tf.initialize_all_variables().run()
+
+            return trainable_variables
+    
+        params = transfer_weights()
+        print_params(params)
+
+        # DAN TL END
+
         # 2. Build our trainer
         if MPI is not None:
             self.trainer = MpiAdamOptimizer(MPI.COMM_WORLD, learning_rate=LR, epsilon=1e-5)
@@ -102,7 +150,7 @@ class Model(object):
         if max_grad_norm is not None:
             # Clip the gradients (normalize)
             grads, _grad_norm = tf.clip_by_global_norm(grads, max_grad_norm)
-        grads_and_var = list(zip(grads, var))
+        # grads_and_var = list(zip(grads, var))
         # zip aggregate each gradient with parameters associated
         # For instance zip(ABCD, xyza) => Ax, By, Cz, Da
 

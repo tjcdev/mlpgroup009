@@ -10,7 +10,7 @@ import time
 from types import SimpleNamespace
 
 save_path = './' + str(time.time()).replace('.', '')
-
+model_load_path = './15525043569503987/BipedalWalker-v2-ppo2/checkpoints'
 # Write all the arguments into a dictionary that we can references e.g. args.env
 args_dict={
     'alg': 'ppo2',
@@ -55,6 +55,7 @@ model = learn(
     nsteps = args.steps_per_update,
     log_interval = args.log_interval,
     save_path = full_path,
+    model_load_path = model_load_path,
     **alg_kwargs
 )
 
