@@ -1,3 +1,5 @@
+# 
+
 import gym
 import tensorflow as tf
 import os
@@ -13,7 +15,7 @@ save_path = './' + str(time.time()).replace('.', '')
 
 # Write all the arguments into a dictionary that we can references e.g. args.env
 args_dict={
-    'alg': 'trpo_mpi',
+    'alg': 'ppo2',
     'total_timesteps': 10000,
     'seed': 0,
     'env': 'BipedalWalker-v2',
@@ -26,9 +28,8 @@ args_dict={
     'steps_per_update': 100,
     'log_interval': 1,
     'save_path': save_path,
-    'load_path': './15525613708466916/BipedalWalkerHardcore-v2-trpo_mpi/final.data-00000-of-00001'
+    'model_load_path': './15525043569635887/BipedalWalker-v2-ppo2/checkpoints'
 }
-
 args = SimpleNamespace(**args_dict)
 
 env_type, env_id = get_env_type(args.env)
@@ -52,9 +53,12 @@ model = learn(
     env=env,
     seed=args.seed,
     total_timesteps=args.total_timesteps,
-    save_path=args.save_path,
-    timesteps_per_batch=args.steps_per_update,
-    load_path=args.load_path,
+    save_interval=args.save_interval,
+    noptepochs = args.num_epochs,
+    nsteps = args.steps_per_update,
+    log_interval = args.log_interval,
+    save_path = full_path,
+    model_load_path = args.model_load_path,
     **alg_kwargs
 )
 

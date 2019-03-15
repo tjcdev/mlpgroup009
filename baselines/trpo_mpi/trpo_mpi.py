@@ -256,7 +256,7 @@ def learn(*,
 
     U.initialize()
     if load_path is not None:
-        pi.load(load_path)
+        pi.load(load_path, tf.Session())
 
     th_init = get_flat()
     if MPI is not None:
