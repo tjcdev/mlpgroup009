@@ -32,7 +32,7 @@ args_dict={
     'log_interval': 1,
     'save_path': save_path,
     'model_load_path': model_load_path,
-    'seed': 0,
+    'seed': 70,
     'reward_scale': 1,
     'flatten_dict_observations': True,
     'transfer_weights': False

@@ -18,7 +18,7 @@ model_load_path = ''
 # Write all the arguments into a dictionary that we can references e.g. args.env
 args_dict={
     'alg': 'ppo2',
-    'env': 'LunarLanderContinuous-v2',
+    'env': 'BipedalWalkerHardcore-v2',
     'network': 'mlp',
     'learning_rate': 0.001,
     'discount_factor':0.99,
@@ -32,7 +32,7 @@ args_dict={
     'log_interval': 1,
     'save_path': save_path,
     'model_load_path': model_load_path,
-    'seed': 0,
+    'seed': 40,
     'reward_scale': 1,
     'flatten_dict_observations': True,
     'transfer_weights': False
