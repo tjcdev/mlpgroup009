@@ -27,7 +27,7 @@ class Model(object):
     - Save load the model
     """
     def __init__(self, *, policy, ob_space, ac_space, nbatch_act, nbatch_train,
-                nsteps, ent_coef, vf_coef, max_grad_norm, load_path, microbatch_size=None):
+                nsteps, ent_coef, vf_coef, max_grad_norm, load_path, transfer_weights=False, microbatch_size=None):
         self.sess = sess = get_session()
 
         with tf.variable_scope('ppo2_model', reuse=tf.AUTO_REUSE):
@@ -101,7 +101,7 @@ class Model(object):
 
         # Transfer weights from an already trained model
         # TODO: this is if we are going to use transfer learning
-        if True:
+        if transfer_weights:
             # Set the path to the pre-trained model
             #pretrained_model = load_path + '/00068.meta'
 
