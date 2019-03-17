@@ -9,7 +9,7 @@ import time
 
 from types import SimpleNamespace
 
-save_path = './' + str(time.time()).replace('.', '')
+save_path = './google_' + str(time.time()).replace('.', '')
 model_load_path = './15525043569503987/BipedalWalker-v2-ppo2/checkpoints'
 # Write all the arguments into a dictionary that we can references e.g. args.env
 args_dict={
