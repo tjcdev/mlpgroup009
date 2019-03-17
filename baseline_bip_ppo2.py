@@ -14,7 +14,7 @@ model_load_path = './15525043569503987/BipedalWalker-v2-ppo2/checkpoints'
 # Write all the arguments into a dictionary that we can references e.g. args.env
 args_dict={
     'alg': 'ppo2',
-    'total_timesteps': 1000000,
+    'total_timesteps': 10000,
     'seed': 0,
     'env': 'BipedalWalker-v2',
     'network': 'mlp',
@@ -22,8 +22,8 @@ args_dict={
     'reward_scale': 1,
     'flatten_dict_observations': True,
     'save_interval': 1,
-    'num_epochs': 10000,
-    'steps_per_update': 10000,
+    'num_epochs': 100,
+    'steps_per_update': 100,
     'log_interval': 1,
     'save_path': save_path
 }
@@ -46,6 +46,8 @@ if not os.path.exists(full_path):
     os.makedirs(full_path)
     os.makedirs(full_path + '/checkpoints')
 
+print("About to start learning model")
+
 model = learn(
     env=env,
     seed=args.seed,
@@ -59,5 +61,6 @@ model = learn(
     **alg_kwargs
 )
 
+print("Attempting to save model")
 # Save the model and variables
 model.save(full_path + '/final')
