@@ -11,24 +11,31 @@ import time
 
 from types import SimpleNamespace
 
-save_path = './' + str(time.time()).replace('.', '')
+save_path = os.path.basename(__file__) + '.' + str(time.time()).replace('.', '')[-6:]
+
+model_load_path = ''
 
 # Write all the arguments into a dictionary that we can references e.g. args.env
 args_dict={
     'alg': 'ppo2',
-    'total_timesteps': 10000,
-    'seed': 0,
     'env': 'BipedalWalker-v2',
     'network': 'mlp',
+    'learning_rate': 0.001,
+    'discount_factor':0.99,
+    'nminibatches': 64,
+    'cliprange': 0.2,
+    'total_timesteps': 1e6,
     'num_env': 1,
-    'reward_scale': 1,
-    'flatten_dict_observations': True,
-    'save_interval': 1,
-    'num_epochs': 100,
-    'steps_per_update': 100,
+    'nsteps': 2048,
+    'noptepochs': 10,
+    'save_interval': 20,
     'log_interval': 1,
     'save_path': save_path,
-    'model_load_path': './15525043569635887/BipedalWalker-v2-ppo2/checkpoints'
+    'model_load_path': model_load_path,
+    'seed': 0,
+    'reward_scale': 1,
+    'flatten_dict_observations': True,
+    'transfer_weights': False
 }
 args = SimpleNamespace(**args_dict)
 
