@@ -102,9 +102,6 @@ class Model(object):
         # Transfer weights from an already trained model
         # TODO: this is if we are going to use transfer learning
         if transfer_weights:
-            # Set the path to the pre-trained model
-            #pretrained_model = load_path + '/00068.meta'
-
             # Get all variables from the model.
             variables_to_restore = {v.name.split(":")[0]: v
                                     for v in tf.get_collection(

@@ -18,7 +18,7 @@ model_load_path = './models/biphard'
 # Write all the arguments into a dictionary that we can references e.g. args.env
 args_dict={
     'alg': 'ppo2',
-    'env': 'BipedalWalker-v2',
+    'env': 'LunarLanderContinuous-v2',
     'network': 'mlp',
     'learning_rate': 0.001,
     'discount_factor':0.99,
