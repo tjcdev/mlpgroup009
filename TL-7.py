@@ -36,7 +36,7 @@ args_dict={
     'reward_scale': 1,
     'flatten_dict_observations': True,
     'transfer_weights': True,
-    'skip_layers': ['ppo2_model/pi/b', 'ppo2_model/pi/logstd', 'ppo2_model/pi/w', 'ppo2_model/vf/b', 'ppo2_model/vf/w', 'ppo2_model/pi/mlp_fc0/b', 'ppo2_model/pi/mlp_fc0/w']
+    'skip_layers': ['ppo2_model/pi/b', 'ppo2_model/pi/logstd', 'ppo2_model/pi/w', 'ppo2_model/vf/b', 'ppo2_model/vf/w', 'ppo2_model/pi/mlp_fc1/b', 'ppo2_model/pi/mlp_fc1/w']
 }
 args = SimpleNamespace(**args_dict)
 
