@@ -27,7 +27,7 @@ class Model(object):
     - Save load the model
     """
     def __init__(self, *, policy, ob_space, ac_space, nbatch_act, nbatch_train,
-                nsteps, ent_coef, vf_coef, max_grad_norm, load_path, skip_layers=[], transfer_weights=False, microbatch_size=None):
+                nsteps, ent_coef, vf_coef, max_grad_norm, load_path, skip_layers=[], frozen_weights=[], transfer_weights=False, microbatch_size=None):
         self.sess = sess = get_session()
 
         with tf.variable_scope('ppo2_model', reuse=tf.AUTO_REUSE):
@@ -125,6 +125,11 @@ class Model(object):
             # Collect all trainale variables
             params = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES)
 
+            # Freeze certain variables
+            params = tf.contrib.framework.filter_variables(
+                    params,
+                    include_patterns=['model'],
+                    exclude_patterns= frozen_weights)
         else:
             # If we are not using transfer learning
             # 1. Get the model parameters
