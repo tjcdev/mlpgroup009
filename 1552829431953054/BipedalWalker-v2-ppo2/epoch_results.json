@@ -1,1 +1,0 @@
-{"serial_timesteps": 100, "nupdates": 1, "total_timesteps": 100, "fps": 24, "explained_variance": -0.05928957462310791, "eprewmean": NaN, "eplenmean": NaN, "time_elapsed": 4.03817892074585, "policy_loss": -0.06753473728895187, "value_loss": 4.637413501739502, "policy_entropy": 5.715794086456299, "approxkl": 0.029915526509284973, "clipfrac": 0.3678002655506134}
