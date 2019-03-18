@@ -10,7 +10,7 @@ import time
 from types import SimpleNamespace
 
 # Set the save path for this model
-save_path = os.path.basename(__file__) + str(time.time()).replace('.', '')[-6:]
+save_path = os.path.basename(__file__) + '.' + str(time.time()).replace('.', '')[-6:]
 
 # The model path we want to load from
 model_load_path = ''
@@ -18,7 +18,7 @@ model_load_path = ''
 # Write all the arguments into a dictionary that we can references e.g. args.env
 args_dict={
     'alg': 'ppo2',
-    'env': 'BipedalWalker-v2',
+    'env': 'LunarLanderContinuous-v2',
     'network': 'mlp',
     'learning_rate': 0.001,
     'discount_factor':0.99,
@@ -28,7 +28,7 @@ args_dict={
     'num_env': 1,
     'nsteps': 2048,
     'noptepochs': 10,
-    'save_interval': 1,
+    'save_interval': 20,
     'log_interval': 1,
     'save_path': save_path,
     'model_load_path': model_load_path,
