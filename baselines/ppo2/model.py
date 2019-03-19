@@ -98,6 +98,9 @@ class Model(object):
                     print("Variable: " + str(k))
                     print("Shape: " + str(v.shape))
                     print(v)
+                    
+        # Initialise the already_initialised array
+        already_inits = []
 
         # Transfer weights from an already trained model
         # TODO: this is if we are going to use transfer learning
