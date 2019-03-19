@@ -21,7 +21,8 @@ def constfn(val):
 def learn(*, network, env, total_timesteps, eval_env = None, seed=None, nsteps=2048, ent_coef=0.0, lr=3e-4,
             vf_coef=0.5,  max_grad_norm=0.5, gamma=0.99, lam=0.95,
             log_interval=10, nminibatches=4, noptepochs=4, cliprange=0.2,
-            save_interval=0, load_path=None, model_fn=None, save_path='', model_load_path='', **network_kwargs):
+            save_interval=0, load_path=None, model_fn=None, save_path='', model_load_path='', skip_layers=[], 
+            frozen_weights=[], transfer_weights=False, second_env=None, **network_kwargs):
     '''
     Learn policy using PPO algorithm (https://arxiv.org/abs/1707.06347)
 
@@ -76,7 +77,6 @@ def learn(*, network, env, total_timesteps, eval_env = None, seed=None, nsteps=2
 
 
     '''
-
     set_global_seeds(seed)
 
     if isinstance(lr, float): lr = constfn(lr)
@@ -86,6 +86,8 @@ def learn(*, network, env, total_timesteps, eval_env = None, seed=None, nsteps=2
     total_timesteps = int(total_timesteps)
 
     policy = build_policy(env, network, **network_kwargs)
+
+    print("Lets start learning")
 
     # Get the nb of env
     nenvs = env.num_envs
@@ -105,7 +107,7 @@ def learn(*, network, env, total_timesteps, eval_env = None, seed=None, nsteps=2
 
     model = model_fn(policy=policy, ob_space=ob_space, ac_space=ac_space, nbatch_act=nenvs, nbatch_train=nbatch_train,
                     nsteps=nsteps, ent_coef=ent_coef, vf_coef=vf_coef,
-                    max_grad_norm=max_grad_norm, load_path=model_load_path)
+                    max_grad_norm=max_grad_norm, load_path=model_load_path, skip_layers=skip_layers, frozen_weights=frozen_weights, transfer_weights=transfer_weights)
 
     if load_path is not None:
         model.load(load_path)
@@ -123,6 +125,11 @@ def learn(*, network, env, total_timesteps, eval_env = None, seed=None, nsteps=2
 
     nupdates = total_timesteps//nbatch
     for update in range(1, nupdates+1):
+        if second_env is not None and (update % 2 == 0):
+            runner = Runner(env=second_env, model=model, nsteps=nsteps, gamma=gamma, lam=lam)
+        else:
+            runner = Runner(env=env, model=model, nsteps=nsteps, gamma=gamma, lam=lam)
+            
         assert nbatch % nminibatches == 0
         # Start timer
         tstart = time.time()

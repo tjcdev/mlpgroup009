@@ -115,8 +115,31 @@ class PolicyWithValue(object):
     def save(self, save_path):
         tf_util.save_state(save_path, sess=self.sess)
 
-    def load(self, load_path):
-        tf_util.load_state(load_path, sess=self.sess)
+    def load(self, load_path, sess):
+        # Set the path to the pre-trained model
+        #pretrained_model = load_path + '/00068.meta'
+
+        # Get all variables from the model.
+        variables_to_restore = {v.name.split(":")[0]: v
+                                for v in tf.get_collection(
+                                    tf.GraphKeys.GLOBAL_VARIABLES)}
+                                
+        # Skip some variables during restore.
+        skip_pretrained_var = []
+        variables_to_restore = {
+            v: variables_to_restore[v] for
+            v in variables_to_restore if not
+            any(x in v for x in skip_pretrained_var)}
+
+        # Restore the remaining variables
+        if variables_to_restore:
+            saver_pre_trained = tf.train.Saver(
+                var_list=variables_to_restore)
+                
+            saver_pre_trained.restore(sess, tf.train.latest_checkpoint(load_path))
+
+        # Collect all trainale variables
+        params = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES)
 
 def build_policy(env, policy_network, value_network=None,  normalize_observations=False, estimate_q=False, **policy_kwargs):
     if isinstance(policy_network, str):
