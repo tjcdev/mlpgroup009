@@ -1,2 +1,2 @@
-model_checkpoint_path: "ppo2_bip"
-all_model_checkpoint_paths: "ppo2_bip"
+model_checkpoint_path: "00068"
+all_model_checkpoint_paths: "00068"
