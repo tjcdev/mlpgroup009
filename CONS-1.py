@@ -57,7 +57,7 @@ second_env_args_dict={
     'model_load_path': model_load_path,
     'seed': 0,
     'reward_scale': 1,
-    'flatten_dict_observations': True,
+    'flatten_dict_observations': True
 }
 second_env_args = SimpleNamespace(**second_env_args_dict)
 
