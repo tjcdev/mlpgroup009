@@ -91,83 +91,6 @@ class Model(object):
         loss = pg_loss - entropy * ent_coef + vf_loss * vf_coef
 
         # UPDATE THE PARAMETERS USING LOSS
-<<<<<<< HEAD
-        # 1. Get the model parameters
-        params = tf.trainable_variables('ppo2_model')
-
-
-        # DAN TL CHANGES START: IMPORTING PRETRAINED AND REINITIALISING
-
-        def print_params(params):
-            for i in range(len(params)):
-                print(i)
-                print(params[i])
-
-
-        def transfer_weights():
-            # weight reinitialisation multiplier: suggested [0.1, 0.03]
-            w = 0.1
-            
-            # Restore variables from disk
-            saver = tf.train.import_meta_graph('../../baseline_weights/ppo2_bip.meta')
-            saver.restore(sess, tf.train.latest_checkpoint('./'))
-            print("model restored")
-            graph = sess.graph
-            trainable_variables = graph.get_collection('trainable_variables')
-            
-            print("pre-trained weights list:\n")
-            print_params(trainable_variables)
-                
-
-            # WEIGHTS TRANSFER
-            # Last layer weight re-initialisation
-            print("check weights values:\n")
-            print(sess.run(trainable_variables[-2]))
-                
-            shape = sess.run(trainable_variables[-2]).shape
-            trainable_variables.pop(-2)
-            initial = tf.constant(w, shape=shape)
-            trainable_variables.append(tf.get_variable('new_weights', dtype=tf.float32,
-                                    initializer= tf.truncated_normal(shape, stddev=w)))
-            tf.initialize_all_variables().run()
-
-            print(sess.run(trainable_variables[-2]))
-
-            # BIAS TRANSFER
-            # Last layer bias re-initialisation 
-            print("check bias values:\n")
-            print(sess.run(trainable_variables[-1]))
-                
-            shape = sess.run(trainable_variables[-1]).shape
-            trainable_variables.pop(-1)
-            initial = tf.constant(w, shape=shape)
-            trainable_variables.append(tf.get_variable('new_bias', dtype=tf.float32,
-                                        initializer= tf.constant(w, shape=shape)))
-            tf.initialize_all_variables().run()
-
-            print(sess.run(trainable_variables[-1]))
-
-
-            print("check list objects in trainable_variables:\n")
-            print_params(trainable_variables)
-
-            return trainable_variables
-    
-            
-
-
-        params = transfer_weights()
-        print_params(params)
-
-        # temporary exit to test implementation of transfer
-        print("params\n",params)
-        sys.exit()
-
-        # DAN TL END
-
-
-
-=======
         def print_weights(params):
             variables_names = [v.name for v in params]
             values = sess.run(variables_names)
@@ -176,7 +99,7 @@ class Model(object):
                     print("Variable: " + str(k))
                     print("Shape: " + str(v.shape))
                     print(v)
-                    
+
         # Initialise the already_initialised array
         already_inits = []
 
@@ -187,7 +110,7 @@ class Model(object):
             variables_to_restore = {v.name.split(":")[0]: v
                                     for v in tf.get_collection(
                                         tf.GraphKeys.GLOBAL_VARIABLES)}
-                                    
+
             # Skip some variables during restore.
             skip_pretrained_var = skip_layers
 
@@ -202,7 +125,7 @@ class Model(object):
             if variables_to_restore:
                 saver_pre_trained = tf.train.Saver(
                     var_list=variables_to_restore)
-                    
+
                 saver_pre_trained.restore(sess, tf.train.latest_checkpoint(load_path))
 
             # Collect all trainale variables
@@ -222,14 +145,13 @@ class Model(object):
                     new_variables,
                     include_patterns=[],
                     exclude_patterns= variables_to_restore)
-            tf.get_default_session().run(tf.variables_initializer(new_variables))   
+            tf.get_default_session().run(tf.variables_initializer(new_variables))
             '''
         else:
             # If we are not using transfer learning
             # 1. Get the model parameters
             params = tf.trainable_variables('ppo2_model')
-      
->>>>>>> toms_develop
+
         # 2. Build our trainer
         if MPI is not None:
             self.trainer = MpiAdamOptimizer(MPI.COMM_WORLD, learning_rate=LR, epsilon=1e-5)
@@ -310,4 +232,3 @@ class Model(object):
             self.stats_list + [self._train_op],
             td_map
         )[:-1]
-
