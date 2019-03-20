@@ -95,7 +95,6 @@ model = learn(
     log_interval = args.log_interval,
     save_path = full_path,
     model_load_path = args.model_load_path,
-    transfer_weights = args.transfer_weights,
     **alg_kwargs
 )
 
