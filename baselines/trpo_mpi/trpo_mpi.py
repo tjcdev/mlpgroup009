@@ -103,6 +103,7 @@ def learn(*,
         max_episodes=0, max_iters=0,  # time constraint
         callback=None,
         load_path=None,
+        save_path='',
         **network_kwargs
         ):
     '''
@@ -255,7 +256,7 @@ def learn(*,
 
     U.initialize()
     if load_path is not None:
-        pi.load(load_path)
+        pi.load(load_path, tf.Session())
 
     th_init = get_flat()
     if MPI is not None:
@@ -385,6 +386,9 @@ def learn(*,
         logger.record_tabular("EpisodesSoFar", episodes_so_far)
         logger.record_tabular("TimestepsSoFar", timesteps_so_far)
         logger.record_tabular("TimeElapsed", time.time() - tstart)
+
+        kvs = logger.getkvs()
+        logger.JSONOutputFormat(save_path + '/epoch_results.json').writekvs(kvs)
 
         if rank==0:
             logger.dump_tabular()

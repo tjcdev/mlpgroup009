@@ -1,3 +1,4 @@
+'''
 #!/bin/sh
 #SBATCH -N 1	  # nodes requested
 #SBATCH -n 1	  # tasks requested
@@ -31,8 +32,9 @@ export TMP=/disk/scratch/${STUDENT_ID}/
 mkdir -p ${TMP}/datasets/
 export DATASET_DIR=${TMP}/datasets/
 
+'''
 # Activate the relevant virtual environment:
-source /home/${STUDENT_ID}/miniconda3/bin/activate mlp009
+source activate gym
 
 cd mlpgroup009/
 

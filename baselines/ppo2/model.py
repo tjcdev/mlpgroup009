@@ -2,6 +2,8 @@ import sys
 import tensorflow as tf
 import functools
 
+import sys
+
 from baselines.common.tf_util import get_session, save_variables, load_variables
 from baselines.common.tf_util import initialize
 
@@ -26,7 +28,7 @@ class Model(object):
     - Save load the model
     """
     def __init__(self, *, policy, ob_space, ac_space, nbatch_act, nbatch_train,
-                nsteps, ent_coef, vf_coef, max_grad_norm, microbatch_size=None):
+                nsteps, ent_coef, vf_coef, max_grad_norm, load_path, skip_layers=[], frozen_weights=[], transfer_weights=False, microbatch_size=None):
         self.sess = sess = get_session()
 
         with tf.variable_scope('ppo2_model', reuse=tf.AUTO_REUSE):
@@ -89,6 +91,7 @@ class Model(object):
         loss = pg_loss - entropy * ent_coef + vf_loss * vf_coef
 
         # UPDATE THE PARAMETERS USING LOSS
+<<<<<<< HEAD
         # 1. Get the model parameters
         params = tf.trainable_variables('ppo2_model')
 
@@ -164,6 +167,69 @@ class Model(object):
 
 
 
+=======
+        def print_weights(params):
+            variables_names = [v.name for v in params]
+            values = sess.run(variables_names)
+            for k, v in zip(variables_names, values):
+                if str(k) == 'ppo2_model/vf/w:0':
+                    print("Variable: " + str(k))
+                    print("Shape: " + str(v.shape))
+                    print(v)
+                    
+        # Initialise the already_initialised array
+        already_inits = []
+
+        # Transfer weights from an already trained model
+        # TODO: this is if we are going to use transfer learning
+        if transfer_weights:
+            # Get all variables from the model.
+            variables_to_restore = {v.name.split(":")[0]: v
+                                    for v in tf.get_collection(
+                                        tf.GraphKeys.GLOBAL_VARIABLES)}
+                                    
+            # Skip some variables during restore.
+            skip_pretrained_var = skip_layers
+
+            variables_to_restore = {
+                v: variables_to_restore[v] for
+                v in variables_to_restore if not
+                any(x in v for x in skip_pretrained_var)}
+
+            already_inits = variables_to_restore
+
+            # Restore the remaining variables
+            if variables_to_restore:
+                saver_pre_trained = tf.train.Saver(
+                    var_list=variables_to_restore)
+                    
+                saver_pre_trained.restore(sess, tf.train.latest_checkpoint(load_path))
+
+            # Collect all trainale variables
+            params = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES)
+
+            # Freeze certain variables
+            params = tf.contrib.framework.filter_variables(
+                    params,
+                    include_patterns=['model'],
+                    exclude_patterns= frozen_weights)
+
+            # Initialise all the other variables
+            '''
+            """Initialize all the uninitialized variables in the global scope."""
+            new_variables = set(tf.global_variables())
+            new_variables = tf.contrib.framework.filter_variables(
+                    new_variables,
+                    include_patterns=[],
+                    exclude_patterns= variables_to_restore)
+            tf.get_default_session().run(tf.variables_initializer(new_variables))   
+            '''
+        else:
+            # If we are not using transfer learning
+            # 1. Get the model parameters
+            params = tf.trainable_variables('ppo2_model')
+      
+>>>>>>> toms_develop
         # 2. Build our trainer
         if MPI is not None:
             self.trainer = MpiAdamOptimizer(MPI.COMM_WORLD, learning_rate=LR, epsilon=1e-5)
@@ -176,7 +242,7 @@ class Model(object):
         if max_grad_norm is not None:
             # Clip the gradients (normalize)
             grads, _grad_norm = tf.clip_by_global_norm(grads, max_grad_norm)
-        grads_and_var = list(zip(grads, var))
+        grads_and_var = zip(grads, var)
         # zip aggregate each gradient with parameters associated
         # For instance zip(ABCD, xyza) => Ax, By, Cz, Da
 
@@ -196,7 +262,9 @@ class Model(object):
         #self.save = functools.partial(save_variables, sess=sess)
         #self.load = functools.partial(load_variables, sess=sess)
 
-        initialize()
+        initialize(already_inits)
+
+
         global_variables = tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope="")
         if MPI is not None:
             sync_from_root(sess, global_variables) #pylint: disable=E1101
