@@ -85,11 +85,29 @@ def in_session(f):
 
 ALREADY_INITIALIZED = set()
 
-def initialize():
+def initialize(already_inits):
     """Initialize all the uninitialized variables in the global scope."""
-    new_variables = set(tf.global_variables()) - ALREADY_INITIALIZED
+    all_variables = set(tf.global_variables())
+    adam_variables = tf.contrib.framework.filter_variables(
+                    all_variables,
+                    include_patterns=['Adam'],
+                    exclude_patterns= [])
+    power_variables = tf.contrib.framework.filter_variables(
+                    all_variables,
+                    include_patterns=['power'],
+                    exclude_patterns= [])
+    non_adam_or_power_variablese = tf.contrib.framework.filter_variables(
+                    all_variables,
+                    include_patterns=['model'],
+                    exclude_patterns= ['Adam'])
+    remaining_variables = tf.contrib.framework.filter_variables(
+                    non_adam_or_power_variablese,
+                    include_patterns=['model'],
+                    exclude_patterns= already_inits)
+
+    new_variables = adam_variables + power_variables + remaining_variables
     get_session().run(tf.variables_initializer(new_variables))
-    ALREADY_INITIALIZED.update(new_variables)
+    #ALREADY_INITIALIZED.update(set(already_inits) + set(new_variables))
 
 # ================================================================
 # Model components

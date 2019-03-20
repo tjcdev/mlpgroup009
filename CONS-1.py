@@ -25,9 +25,9 @@ args_dict={
     'discount_factor':0.99,
     'nminibatches': 64,
     'cliprange': 0.2,
-    'total_timesteps': 1e6,
+    'total_timesteps': 1e7,
     'num_env': 1,
-    'nsteps': 2048,
+    'nsteps': 20480,
     'noptepochs': 10,
     'save_interval': 20,
     'log_interval': 1,
@@ -36,7 +36,6 @@ args_dict={
     'seed': 0,
     'reward_scale': 1,
     'flatten_dict_observations': True,
-    'transfer_weights': True
 }
 args = SimpleNamespace(**args_dict)
 
@@ -48,9 +47,9 @@ second_env_args_dict={
     'discount_factor':0.99,
     'nminibatches': 64,
     'cliprange': 0.2,
-    'total_timesteps': 1e6,
+    'total_timesteps': 1e7,
     'num_env': 1,
-    'nsteps': 2048,
+    'nsteps': 20480,
     'noptepochs': 10,
     'save_interval': 20,
     'log_interval': 1,
@@ -58,8 +57,7 @@ second_env_args_dict={
     'model_load_path': model_load_path,
     'seed': 0,
     'reward_scale': 1,
-    'flatten_dict_observations': True,
-    'transfer_weights': True
+    'flatten_dict_observations': True
 }
 second_env_args = SimpleNamespace(**second_env_args_dict)
 
@@ -97,7 +95,6 @@ model = learn(
     log_interval = args.log_interval,
     save_path = full_path,
     model_load_path = args.model_load_path,
-    transfer_weights = args.transfer_weights,
     **alg_kwargs
 )
 

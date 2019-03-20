@@ -98,6 +98,9 @@ class Model(object):
                     print("Variable: " + str(k))
                     print("Shape: " + str(v.shape))
                     print(v)
+                    
+        # Initialise the already_initialised array
+        already_inits = []
 
         # Transfer weights from an already trained model
         # TODO: this is if we are going to use transfer learning
@@ -115,6 +118,8 @@ class Model(object):
                 v in variables_to_restore if not
                 any(x in v for x in skip_pretrained_var)}
 
+            already_inits = variables_to_restore
+
             # Restore the remaining variables
             if variables_to_restore:
                 saver_pre_trained = tf.train.Saver(
@@ -130,6 +135,17 @@ class Model(object):
                     params,
                     include_patterns=['model'],
                     exclude_patterns= frozen_weights)
+
+            # Initialise all the other variables
+            '''
+            """Initialize all the uninitialized variables in the global scope."""
+            new_variables = set(tf.global_variables())
+            new_variables = tf.contrib.framework.filter_variables(
+                    new_variables,
+                    include_patterns=[],
+                    exclude_patterns= variables_to_restore)
+            tf.get_default_session().run(tf.variables_initializer(new_variables))   
+            '''
         else:
             # If we are not using transfer learning
             # 1. Get the model parameters
@@ -167,7 +183,9 @@ class Model(object):
         #self.save = functools.partial(save_variables, sess=sess)
         #self.load = functools.partial(load_variables, sess=sess)
 
-        initialize()
+        initialize(already_inits)
+
+
         global_variables = tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope="")
         if MPI is not None:
             sync_from_root(sess, global_variables) #pylint: disable=E1101

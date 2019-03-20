@@ -13,7 +13,7 @@ from types import SimpleNamespace
 save_path = os.path.basename(__file__) + '.' + str(time.time()).replace('.', '')[-6:]
 
 # The model path we want to load from
-model_load_path = './models/bip'
+model_load_path = ''
 
 # Write all the arguments into a dictionary that we can references e.g. args.env
 args_dict={
@@ -24,9 +24,9 @@ args_dict={
     'discount_factor':0.99,
     'nminibatches': 64,
     'cliprange': 0.2,
-    'total_timesteps': 1e6,
+    'total_timesteps': 1e7,
     'num_env': 1,
-    'nsteps': 2048,
+    'nsteps': 20480,
     'noptepochs': 10,
     'save_interval': 20,
     'log_interval': 1,
@@ -35,7 +35,7 @@ args_dict={
     'seed': 0,
     'reward_scale': 1,
     'flatten_dict_observations': True,
-    'transfer_weights': True,
+    'transfer_weights': False
 }
 args = SimpleNamespace(**args_dict)
 
@@ -68,7 +68,6 @@ model = learn(
     save_path = full_path,
     model_load_path = args.model_load_path,
     transfer_weights = args.transfer_weights,
-    skip_layers=args.skip_layers,
     **alg_kwargs
 )
 

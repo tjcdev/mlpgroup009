@@ -13,20 +13,20 @@ from types import SimpleNamespace
 save_path = os.path.basename(__file__) + '.' + str(time.time()).replace('.', '')[-6:]
 
 # The model path we want to load from
-model_load_path = './models/bip'
+model_load_path = ''
 
 # Write all the arguments into a dictionary that we can references e.g. args.env
 args_dict={
     'alg': 'ppo2',
-    'env': 'LunarLanderContinuous-v2',
+    'env': 'BipedalWalker-v2',
     'network': 'mlp',
     'learning_rate': 0.001,
     'discount_factor':0.99,
     'nminibatches': 64,
     'cliprange': 0.2,
-    'total_timesteps': 1e6,
+    'total_timesteps': 1e7,
     'num_env': 1,
-    'nsteps': 2048,
+    'nsteps': 20480,
     'noptepochs': 10,
     'save_interval': 20,
     'log_interval': 1,
@@ -35,7 +35,7 @@ args_dict={
     'seed': 0,
     'reward_scale': 1,
     'flatten_dict_observations': True,
-    'transfer_weights': True
+    'transfer_weights': False
 }
 args = SimpleNamespace(**args_dict)
 
